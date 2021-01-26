@@ -1,0 +1,416 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search> 
+  
+    
+    <entry>
+      <title>CentOS 命令</title>
+      <link href="/2020/01/08/CentOS-Command/"/>
+      <url>/2020/01/08/CentOS-Command/</url>
+      
+        <content type="html"><![CDATA[<p>常用的 CentOS 命令笔记</p><h1 id="文件资源"><a href="#文件资源" class="headerlink" title="文件资源"></a>文件资源</h1><ul><li>df -h<br>查看磁盘和分区状态</li><li>du -h(-sh)<br>查看文件夹的占用大小</li><li>head -10 file<br>查看文件前几行</li><li>tail -10 file<br>查看文件后几行</li><li>iostat -d -x -k 1<br>查看设备利用率</li></ul><h1 id="文件压缩及解压"><a href="#文件压缩及解压" class="headerlink" title="文件压缩及解压"></a>文件压缩及解压</h1><h2 id="压缩"><a href="#压缩" class="headerlink" title="压缩"></a>压缩</h2><ul><li>.tar -&gt; tar -cvf filename.tar.gz ./dirname<br>c 为压缩<br>v 为显示进度<br>f 为指定文件或文件夹</li><li>.tar.gz -&gt; tar -cjvf filename.tar.gz ./dirname</li><li>.tar.bz2 -&gt; tar -czvf filename.tar.bz2 ./dirname</li></ul><h2 id="解压"><a href="#解压" class="headerlink" title="解压"></a>解压</h2><ul><li>.tar -&gt; tar -xvf filename.tar<br>x 为解压<br>v 为显示进度<br>f 为指定文件</li><li>.tar.gz -&gt; tar -xzvf filename.tar.gz</li><li>.tar.bz2 -&gt; tar -xjvf filename.tar.bz2</li><li>.zip -&gt; unzip filename.zip</li></ul><h1 id="后台运行任务"><a href="#后台运行任务" class="headerlink" title="后台运行任务"></a>后台运行任务</h1><ul><li>python test.py arg arg &gt; test.log &amp;  </li><li>nohup python test.py arg &gt; test.log 2&gt;&amp;1 &amp;</li></ul><h1 id="开机执行"><a href="#开机执行" class="headerlink" title="开机执行"></a>开机执行</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># /etc/rc.local 软链到 /etc/rc.d/rc.local</span><br><span class="line"># /etc/rc.d/rc.local 默认没有执行权限</span><br><span class="line">vim /etc/rc.local</span><br><span class="line">chmod +x /etc/rc.d/rc.local</span><br></pre></td></tr></table></figure><h1 id="磁盘挂载"><a href="#磁盘挂载" class="headerlink" title="磁盘挂载"></a>磁盘挂载</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mount 192.168.1.1:/data/nfs-share /data/share-file</span><br></pre></td></tr></table></figure><p>注：如果需要设置开机挂载，在/etc/fstab添加一行配置即可：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">192.168.1.1:/data/nfs-share /data/share-file nfs rw,tcp,intr 0 1</span><br></pre></td></tr></table></figure><p>然后服务端和客户端都要用enable设置nfs和rpcbind服务开机启动，然后才可以正常挂载</p><blockquote><p>也可以在 rc.local 中添加上方的挂载代码来解决开机自动挂载</p></blockquote><h1 id="防火墙"><a href="#防火墙" class="headerlink" title="防火墙"></a>防火墙</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 查询端口是否开放</span><br><span class="line">firewall-cmd --query-port=8080/tcp</span><br><span class="line"># 开放端口</span><br><span class="line">firewall-cmd --permanent --add-port=80/tcp</span><br><span class="line"># 移除端口</span><br><span class="line">firewall-cmd --permanent --remove-port=8080/tcp</span><br><span class="line"># 重新加载规则</span><br><span class="line">firewall-cmd reload</span><br></pre></td></tr></table></figure><h1 id="文件链接"><a href="#文件链接" class="headerlink" title="文件链接"></a>文件链接</h1><ul><li>硬链接<br>ln catalina.out /share/</li><li>软连接<br>ln -s /home/share/ /share</li></ul>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> Linux </tag>
+            
+            <tag> CentOS </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
+      <title>vagrant 中的 centos7 虚拟机安装 python3</title>
+      <link href="/2019/09/23/vagrant-centos7-install-python3/"/>
+      <url>/2019/09/23/vagrant-centos7-install-python3/</url>
+      
+        <content type="html"><![CDATA[<p>由于项目中有 python 脚本需要在 linux 中运行，于是尝试了下在 vagrant 中的 centos7 虚拟机中安装 python3，本文记录了操作过程中遇到的问题。</p><h1 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h1><p>安装编译环境<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install openssl-devel bzip2-devel expat-devel gdbm-devel readline-devel sqlite-devel gcc-c++ libffi-devel</span><br></pre></td></tr></table></figure></p><p>下载最新的 python 源码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://www.python.org/ftp/python/3.7.3/Python-3.7.3.tgz</span><br></pre></td></tr></table></figure></p><p>解压<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf Python-3.7.3.tgz</span><br></pre></td></tr></table></figure></p><h1 id="安装-python"><a href="#安装-python" class="headerlink" title="安装 python"></a>安装 python</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd Python-3.7.3</span><br></pre></td></tr></table></figure><p>生成 Makefile 并编译安装 python，一般来说，这里不会有问题。不幸的是我遇到了，错误信息及解决方案将写在文末。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./configure make&amp;&amp;make install</span><br></pre></td></tr></table></figure></p><h1 id="设置环境"><a href="#设置环境" class="headerlink" title="设置环境"></a>设置环境</h1><p>可以使用 type 命令查看 python3 最终的执行路径，其它的如 yum 的配置可以自行查找资料。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">type python3</span><br></pre></td></tr></table></figure></p><h1 id="错误信息及解决方案"><a href="#错误信息及解决方案" class="headerlink" title="错误信息及解决方案"></a>错误信息及解决方案</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 运行的命令</span><br><span class="line">./configure</span><br><span class="line"># 错误信息</span><br><span class="line">configure: error: cannot run C compiled programs.</span><br><span class="line">If you meant to cross compile, use `--host&apos;.</span><br></pre></td></tr></table></figure><p>直接使用 ./configure 无法生成 Makefile，这时需要指定 –host（运行平台） –build（编译平台）</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 运行的命令</span><br><span class="line">./configure --host=x86_64 --build=x86_64-linux</span><br><span class="line"># 错误信息</span><br><span class="line">checking for python interpreter for cross build... configure: error: python3.7 interpreter not found</span><br></pre></td></tr></table></figure><p>指定 –host –build 后，报错解释器未找到，这是因为 –host –build 不同，这时会使用交叉编译，而我们可以指定为相同的值，使检测时不使用交叉编译。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 运行的命令</span><br><span class="line">./configure --prefix=/usr/local/python3 --build=x86_64-linux-gnu --host=x86_64-linux-gnu</span><br><span class="line"># 错误信息</span><br><span class="line">configure: error: cannot run C compiled programs.</span><br><span class="line">If you meant to cross compile, use `--host&apos;.</span><br></pre></td></tr></table></figure><p>这是因为在虚拟机的共享分区（与 win 的共享目录）中运行的命令，将文件移动到其它非共享分区，再次运行命令即可生成 Makefile。</p><blockquote><p><a href="https://askubuntu.com/questions/360329/error-cannot-run-c-compiled-programs-if-you-meant-to-cross-compile-use-host" target="_blank" rel="noopener">https://askubuntu.com/questions/360329/error-cannot-run-c-compiled-programs-if-you-meant-to-cross-compile-use-host</a></p></blockquote><hr><p>Last updated: 2019-10-18</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> Update </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
+      <title>Docker 常用镜像及配置</title>
+      <link href="/2019/08/16/Docker-images/"/>
+      <url>/2019/08/16/Docker-images/</url>
+      
+        <content type="html"><![CDATA[<p>环境为 Windows 10x64，Docker desktop community v2.1.0.1。<br>外网下载会比较慢，可以挂个梯子或使用百度云下载，链接: <a href="https://pan.baidu.com/s/1INHh2Qyr_ECSpTHbZy7heA" target="_blank" rel="noopener">https://pan.baidu.com/s/1INHh2Qyr_ECSpTHbZy7heA</a> 提取码: 4h52 。</p><h2 id="基础配置"><a href="#基础配置" class="headerlink" title="基础配置"></a>基础配置</h2><h3 id="磁盘挂载"><a href="#磁盘挂载" class="headerlink" title="磁盘挂载"></a>磁盘挂载</h3><p>在 docker setting 中开启磁盘挂载，勾选挂载的磁盘，点击 apply，然后输入账号密码确认即可。<br><img src="/img/docker/20190905211104.png" alt="docker 挂载磁盘]"></p><h3 id="镜像下载加速"><a href="#镜像下载加速" class="headerlink" title="镜像下载加速"></a>镜像下载加速</h3><p>可以在阿里云 <a href="https://cr.console.aliyun.com" target="_blank" rel="noopener">https://cr.console.aliyun.com</a> 开启私人容器镜像<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">https://registry.docker-cn.com</span><br><span class="line">https://docker.mirrors.ustc.edu.cn</span><br><span class="line">https://hub-mirror.c.163.com</span><br></pre></td></tr></table></figure></p><h2 id="常用镜像"><a href="#常用镜像" class="headerlink" title="常用镜像"></a>常用镜像</h2><h3 id="MySQL5-7"><a href="#MySQL5-7" class="headerlink" title="MySQL5.7"></a>MySQL5.7</h3><blockquote><p>需要先开启磁盘挂载，linux 或者 macos 可以使用 -v /usr/mysql/datadir:/var/lib/mysql 设置 mysql 保存数据的路径，前面的是本机路径。</p></blockquote><p>配置介绍<br>镜像名为 docker-mysql<br>映射端口为 3306<br>mysql 的数据映射在 C:\Users\MGZ\docker-data\mysql\data<br>mysql 的配置文件映射在 C:\Users\MGZ\docker-data\mysql\conf<br>root 密码为 123456<br>字符集设置为 utf8，可修改为 utf8mb4（一般使用 utf8 更好，当要储存 emoji 或偏僻汉字时需要设置）<br>排序规则设置为 utf8_unicode_ci，可修改为 utf8_general_ci（utf8mb4 需要修改为 utf8mb4_unicode_ci、utf8mb4_general_ci）<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 下载 mysql5.7 官方镜像</span><br><span class="line">docker pull mysql:5.7</span><br><span class="line">docker run --name docker-mysql -p 3306:3306 -v /c/Users/MGZ/docker-data/mysql/data:/var/lib/mysql -v /c/Users/MGZ/docker-data/mysql/conf:/etc/mysql/conf.d -e MYSQL_ROOT_PASSWORD=123456 -d mysql:5.7 --character-set-server=utf8 --collation-server=utf8_unicode_ci</span><br></pre></td></tr></table></figure></p><blockquote><p>如果存在问题，可使用 docker logs docker-mysql 查看日志，更多配置请查看 <a href="https://hub.docker.com/_/mysql" target="_blank" rel="noopener">https://hub.docker.com/_/mysql</a></p></blockquote><h2 id="docker-命令"><a href="#docker-命令" class="headerlink" title="docker 命令"></a>docker 命令</h2><p>CONTAINER_NAME 为容器名<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker logs CONTAINER_NAME // 查看容器启动后的日志</span><br><span class="line">docker logs --slice 30m CONTAINER_NAME // 查看容器启动后 30 分钟内的日志</span><br></pre></td></tr></table></figure></p><hr><p>Last updated: 2019-09-05</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> MySQL </tag>
+            
+            <tag> Docker </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
+      <title>MySQL 下 INDEX（索引）的使用</title>
+      <link href="/2019/07/28/Use-of-INDEX-under-MySQL/"/>
+      <url>/2019/07/28/Use-of-INDEX-under-MySQL/</url>
+      
+        <content type="html"><![CDATA[<h3 id="MySQL-下-INDEX（索引）的使用"><a href="#MySQL-下-INDEX（索引）的使用" class="headerlink" title="MySQL 下 INDEX（索引）的使用"></a>MySQL 下 INDEX（索引）的使用</h3><h4 id="INDEX-是什么"><a href="#INDEX-是什么" class="headerlink" title="INDEX 是什么"></a>INDEX 是什么</h4><blockquote><p>写不下去了，简介原文于 <a href="https://www.runoob.com/mysql/mysql-index.html" target="_blank" rel="noopener">https://www.runoob.com/mysql/mysql-index.html</a> ，进行了一定的修改。</p></blockquote><p>MySQL INDEX 的建立对于 MySQL 的高效运行是很重要的，INDEX 可以大大提高 MySQL 的检索速度。</p><p>打个比方，如果合理的设计且使用 INDEX 的 MySQL 是一辆兰博基尼的话，那么没有设计和使用 INDEX 的 MySQL 就是一个人力三轮车。</p><p>拿汉语字典的目录页（索引）打比方，我们可以按拼音、笔画、偏旁部首等排序的目录（索引）快速查找到需要的字。</p><p>INDEX 分单列索引和组合索引。单列索引，即一个 INDEX 只包含单个列，一个表可以有多个单列索引，但这不是组合索引。组合索引，即一个 INDEX 包含多个列。</p><p>创建 INDEX 时，你需要确保该 INDEX 是应用在 SQL 查询语句的条件(一般作为 WHERE 子句的条件)。</p><p>实际上，INDEX 也是一张表，该表保存了主键与索引字段，并指向实体表的记录。</p><p>上面都在说使用 INDEX 的好处，但过多的使用 INDEX 将会造成滥用。因此 INDEX 也会有它的缺点：虽然 INDEX 大大提高了查询速度，同时却会降低更新表的速度，如对表进行 INSERT、UPDATE 和 DELETE。因为更新表时，MySQL 不仅要保存数据，还要保存一下索引文件。</p><p>建立 INDEX 会占用磁盘空间的索引文件。</p><h4 id="索引类型"><a href="#索引类型" class="headerlink" title="索引类型"></a>索引类型</h4><h5 id="Normal"><a href="#Normal" class="headerlink" title="Normal"></a>Normal</h5><p>普通索引</p><h5 id="Unique"><a href="#Unique" class="headerlink" title="Unique"></a>Unique</h5><p>唯一索引。当字段是唯一时使用，如用户名、手机号。</p><h5 id="Full-Text"><a href="#Full-Text" class="headerlink" title="Full Text"></a>Full Text</h5><p>全文搜索索引。用于搜索较长的文本，当较短的文本，使用普通索引即可。</p><h4 id="索引方法"><a href="#索引方法" class="headerlink" title="索引方法"></a>索引方法</h4><blockquote><p>Innodb 引擎和 MyISAM 引擎默认的索引方法是 B-Tree。</p></blockquote><p>索引方法分为 B-Tree 和 Hash，想要跟深入了解，可以查看 <a href="https://www.cnblogs.com/hanybblog/p/6485419.html" target="_blank" rel="noopener">https://www.cnblogs.com/hanybblog/p/6485419.html</a></p><blockquote><p>参考链接 <a href="https://www.cnblogs.com/brxHqs/p/9722113.html" target="_blank" rel="noopener">https://www.cnblogs.com/brxHqs/p/9722113.html</a></p></blockquote><hr><p>Last updated: 2019-07-28</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> MySQL </tag>
+            
+            <tag> Database INDEX </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
+      <title>Win10 下 Redis-Cluster 集群搭建</title>
+      <link href="/2019/07/27/Redis-cluster-for-win10/"/>
+      <url>/2019/07/27/Redis-cluster-for-win10/</url>
+      
+        <content type="html"><![CDATA[<h3 id="Win10-下-redis-集群搭建"><a href="#Win10-下-redis-集群搭建" class="headerlink" title="Win10 下 redis 集群搭建"></a>Win10 下 redis 集群搭建</h3><h4 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h4><h5 id="redis"><a href="#redis" class="headerlink" title="redis"></a>redis</h5><ol><li>win 版 redis 下载地址 <a href="https://github.com/microsoftarchive/redis/releases" target="_blank" rel="noopener">https://github.com/microsoftarchive/redis/releases</a>  ，下载 zip 版，解压后，复制六份（建议放在同一文件夹下）。</li><li>重命名 redis-svrver 文件夹为 6371、6372、6373、6374、6375、6376。</li><li><p>寻找 redis.windows.conf 中相同参数并修改，端口与文件夹名相同。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">port 6371</span><br><span class="line">appendonly yes</span><br><span class="line">cluster-enabled yes</span><br><span class="line">cluster-config-file nodes-6371.conf</span><br><span class="line">cluster-node-timeout 15000</span><br></pre></td></tr></table></figure></li><li><p>编写脚本，启动六个 redis-svrver。新建 txt，复制脚本到 txt 中，修改 txt 扩展名为 bat 或者 cmd（我命名为 redis-all.cmd）。</p><blockquote><p>我将 redis-svrver 都放在 D 盘的 redis 文件夹中，如果和我不同，自行修改脚本，下图为大致的目录结构。<br><img src="/img/redis/20190731191124.png" alt="目录"></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">@echo off</span><br><span class="line">D:</span><br><span class="line">cd redis</span><br><span class="line">for %%i in (1 2 3 4 5 6) do (</span><br><span class="line">    if %%i == 1 (</span><br><span class="line">        cd 637%%i</span><br><span class="line">        start redis-server.exe redis.windows.conf</span><br><span class="line">    ) else (</span><br><span class="line">        cd ../637%%i</span><br><span class="line">        start redis-server.exe redis.windows.conf</span><br><span class="line">    )</span><br><span class="line">)</span><br></pre></td></tr></table></figure></blockquote></li><li><p>下载 redis-trib.rb，下载地址为 <a href="https://raw.githubusercontent.com/antirez/redis/3.0/src/redis-trib.rb" target="_blank" rel="noopener">https://raw.githubusercontent.com/antirez/redis/3.0/src/redis-trib.rb</a> ，浏览器直接 ctrl + s，保存为 redis-trib.rb 即可。</p></li><li>编写 redis 集群初始化脚本，注意，脚本要和 redis-trib.rb 平级。新建、保存和上面操作一样（我命名为 redis-trib.cmd）。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ruby redis-trib.rb create --replicas 1 127.0.0.1:6373 127.0.0.1:6374 127.0.0.1:6375 127.0.0.1:6376 127.0.0.1:6377 127.0.0.1:6378</span><br></pre></td></tr></table></figure></li></ol><h5 id="ruby"><a href="#ruby" class="headerlink" title="ruby"></a>ruby</h5><ol><li>使用 <a href="http://railsinstaller.org/en" target="_blank" rel="noopener">http://railsinstaller.org/en</a> ，安装 Windows ruby 2.3 版本即可。</li><li><p>打开 cmd，依次输入以下命令，检查环境（正常情况下，会打印 ruby 和 gem 版本号）。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ruby -v</span><br><span class="line">gem -v</span><br></pre></td></tr></table></figure></li><li><p>如果没有问题，执行 gem install redis，安装 redis 集群需要的环境。</p></li></ol><h4 id="集群搭建"><a href="#集群搭建" class="headerlink" title="集群搭建"></a>集群搭建</h4><ol><li>运行 redis-all.cmd。</li><li>运行 redis-trib.cmd。<blockquote><p>运行 redis-trib.cmd 一段时间后，需要确认，输入 yes 即可。再次等待一段时间，会给六个 redis-server 分配主从的同时，给主 redis 分配 solt。如果六个 redis-server 窗口都开始刷屏，说明到这一步没有问题（有问题，使用搜索引擎解决或查看下方遇到的问题）。<br><img src="/img/redis/20190727212532.png" alt="创建集群成功"></p></blockquote></li><li><p>再次打开 cmd，先 cd 到一个 redis-server 目录，输入以下命令，连接 redis-cli。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis-cli.exe -c -p 6371</span><br></pre></td></tr></table></figure></li><li><p>连接成功后，输入以下命令，使用 redis-server 可视化工具（RDM)，连接其它节点，查看是否有 name ，如果有，说明集群已经正常工作。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set name mgzu</span><br></pre></td></tr></table></figure></li></ol><h4 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h4><h5 id="双击-redis-trib-cmd-一闪而逝"><a href="#双击-redis-trib-cmd-一闪而逝" class="headerlink" title="双击 redis-trib.cmd 一闪而逝"></a>双击 redis-trib.cmd 一闪而逝</h5><p>可以打开 cmd，cd 到脚本目录，使用以下命令启动，如果发生错误，可以在窗口中看到错误信息。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">start redis-trib.cmd</span><br></pre></td></tr></table></figure></p><h5 id="当我第一次初始化集群时，只有三个主节点在同步数据，三个从节点并未同步"><a href="#当我第一次初始化集群时，只有三个主节点在同步数据，三个从节点并未同步" class="headerlink" title="当我第一次初始化集群时，只有三个主节点在同步数据，三个从节点并未同步"></a>当我第一次初始化集群时，只有三个主节点在同步数据，三个从节点并未同步</h5><p>解决方法是删除所有 redis-server 目录下的 dump 和 nodes-*.conf 文件，重新初始化集群。</p><h5 id="error-CLUSTERDOWN-The-cluster-is-down"><a href="#error-CLUSTERDOWN-The-cluster-is-down" class="headerlink" title="(error) CLUSTERDOWN The cluster is down"></a>(error) CLUSTERDOWN The cluster is down</h5><p>当集群初始化失败，连接到 redis-cli，插入数据时，就会发生这个错误，解决方式与上面相同。</p><h5 id="error-MOVED-5798-127-0-0-1-6372"><a href="#error-MOVED-5798-127-0-0-1-6372" class="headerlink" title="(error) MOVED 5798 127.0.0.1:6372"></a>(error) MOVED 5798 127.0.0.1:6372</h5><p>当集群环境中，启动 redis-cli，插入数据时，有时会发生 MOVED 错误，需要使用错误提示中的端口，或者加上 -c 参数。</p><h4 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h4><p><a href="https://blog.csdn.net/hao495430759/article/details/80540407" target="_blank" rel="noopener">https://blog.csdn.net/hao495430759/article/details/80540407</a></p><hr><p>Last updated: 2019-07-27</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> Redis </tag>
+            
+            <tag> Redis-Cluster </tag>
+            
+            <tag> 集群 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
+      <title>Spring Boot 2 配置 Spring Boot Admin 监控</title>
+      <link href="/2018/07/11/Spring-boot-admin-v2/"/>
+      <url>/2018/07/11/Spring-boot-admin-v2/</url>
+      
+        <content type="html"><![CDATA[<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>最近开始使用 Spring Boot 2 写 Dawn（自己的小项目），想使用给我的应用添加一个监控。但是目前网上搜索到的大多都是 Spring Boot Admin v1 版本的配置。然后凭着自己 -3 级的英语去查看官方文档🤣。<br>Spring Boot Admin 分为 Server 端和 Client 端。本篇博客只讲最简单的应用。</p><h3 id="server"><a href="#server" class="headerlink" title="server"></a>server</h3><h4 id="创建-dawn-server-项目"><a href="#创建-dawn-server-项目" class="headerlink" title="创建 dawn-server 项目"></a>创建 dawn-server 项目</h4><p>创建一个 Spring Boot 2 的项目为 Server 端。</p><h4 id="添加-spring-boot-admin-server-的-Maven-依赖"><a href="#添加-spring-boot-admin-server-的-Maven-依赖" class="headerlink" title="添加 spring boot admin server 的 Maven 依赖"></a>添加 spring boot admin server 的 Maven 依赖</h4><p>pom.xml<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- spring boot admin server --&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;de.codecentric&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-boot-admin-server&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;2.0.1&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;de.codecentric&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-boot-admin-server-ui&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;2.0.1&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure></p><h4 id="配置-application-yml"><a href="#配置-application-yml" class="headerlink" title="配置 application.yml"></a>配置 application.yml</h4><p>application.yml<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">server:</span><br><span class="line">  port: 1122</span><br><span class="line">  tomcat:</span><br><span class="line">    uri-encoding: utf-8</span><br></pre></td></tr></table></figure></p><h3 id="client"><a href="#client" class="headerlink" title="client"></a>client</h3><h4 id="创建-dawn-client-项目"><a href="#创建-dawn-client-项目" class="headerlink" title="创建 dawn-client 项目"></a>创建 dawn-client 项目</h4><p>再次创建一个 Spring Boot 2 的项目，作为 client 端。</p><h4 id="添加-spring-boot-admin-client-的-Maven-依赖"><a href="#添加-spring-boot-admin-client-的-Maven-依赖" class="headerlink" title="添加 spring boot admin client 的 Maven 依赖"></a>添加 spring boot admin client 的 Maven 依赖</h4><p>pom.xml<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- spring boot admin client --&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;de.codecentric&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-boot-admin-starter-client&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;2.0.1&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure></p><h4 id="配置-application-yml-1"><a href="#配置-application-yml-1" class="headerlink" title="配置 application.yml"></a>配置 application.yml</h4><p>application.yml<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># admin-client 曝光配置</span><br><span class="line">management.endpoints.web.exposure:</span><br><span class="line">  include: &quot;*&quot;</span><br><span class="line"> </span><br><span class="line">server:</span><br><span class="line">  port: 1121</span><br><span class="line">  tomcat:</span><br><span class="line">    uri-encoding: utf-8</span><br><span class="line">   </span><br><span class="line"># admin-client 配置</span><br><span class="line">spring.boot.admin.client:</span><br><span class="line">  url: http://localhost:1122</span><br></pre></td></tr></table></figure></p><h3 id="the-last"><a href="#the-last" class="headerlink" title="the last"></a>the last</h3><h4 id="安全性"><a href="#安全性" class="headerlink" title="安全性"></a>安全性</h4><p>需要和 Spring Security 配合使用，有待研究😵。</p><h4 id="展示更多信息"><a href="#展示更多信息" class="headerlink" title="展示更多信息"></a>展示更多信息</h4><p>可以配置更多信息的展示<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">info:</span><br><span class="line">  app:</span><br><span class="line">    name: &quot;@project.name@&quot;</span><br><span class="line">    description: &quot;@project.description@&quot;</span><br><span class="line">    version: &quot;@project.version@&quot;</span><br><span class="line">    spring-boot-version: &quot;@project.parent.version@&quot;</span><br></pre></td></tr></table></figure></p><hr><p>Last updated: 2018-07-11</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> Spring boot </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
+      <title>视频推荐</title>
+      <link href="/2018/05/08/Commend-video/"/>
+      <url>/2018/05/08/Commend-video/</url>
+      
+        <content type="html"><![CDATA[<p>视频分享。🙃</p><h3 id="2018-05-08"><a href="#2018-05-08" class="headerlink" title="2018-05-08"></a>2018-05-08</h3><ul><li><a href="http://study.163.com/course/courseMain.htm?courseId=1455026" target="_blank" rel="noopener">Java8 编程开发入门</a></li><li><a href="https://www.imooc.com/learn/947" target="_blank" rel="noopener">ajax 跨域完全讲解</a><blockquote><p>需要注意的是 <strong>ajax 跨域完全讲解</strong> 并未讲解跨域安全问题</p></blockquote></li></ul><hr><p>Last updated: 2018-05-08</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> commend </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> video </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
+      <title>Github gh-pages 服务</title>
+      <link href="/2018/05/08/Gh-pages/"/>
+      <url>/2018/05/08/Gh-pages/</url>
+      
+        <content type="html"><![CDATA[<p>开启 gh-pages，基于 Node gh-pages。</p><h3 id="gh-pages-介绍"><a href="#gh-pages-介绍" class="headerlink" title="gh-pages 介绍"></a>gh-pages 介绍</h3><p>Github 的免费服务，支持静态预览<br>Node gh-pages 可以快速部署预览页面</p><h3 id="安装和配置"><a href="#安装和配置" class="headerlink" title="安装和配置"></a>安装和配置</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install gh-pages</span><br></pre></td></tr></table></figure><p>配置 package.json，添加 homepage、scripts(注意修改 url)。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&quot;homepage&quot;: &quot;https://mgzu.github.com/dawn-tools&quot;,</span><br><span class="line">&quot;scripts&quot;: &#123;</span><br><span class="line">  &quot;predeploy&quot;: &quot;vue-cli-service build&quot;,</span><br><span class="line">  &quot;deploy&quot;: &quot;gh-pages -d dist&quot;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure></p><p>幸运的话，你会遇到。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fatal: could not read Username for &apos;https://github.com&apos;: No error</span><br></pre></td></tr></table></figure></p><p>我的解决方法是修改隐藏目录 <strong>.git</strong> 下的 <strong>config</strong> 文件。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">url = https://github.com/mgzu/dawn-tools.git</span><br><span class="line">修改为</span><br><span class="line">url = git@github.com:mgzu/dawn-tools.git</span><br></pre></td></tr></table></figure></p><hr><p>Last updated: 2018-08-23</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Github </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Github </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
+      <title>文章推荐</title>
+      <link href="/2018/04/28/Commend-article/"/>
+      <url>/2018/04/28/Commend-article/</url>
+      
+        <content type="html"><![CDATA[<p>阅读过的精品文章。😄  </p><blockquote><p>不定期更新，如果文章失效，可留言，我会删除的（啥时候会看到就不知道了），感谢！😘</p></blockquote><h3 id="2019-08-08"><a href="#2019-08-08" class="headerlink" title="2019-08-08"></a>2019-08-08</h3><ul><li><a href="https://www.cnblogs.com/skywang12345/tag/collection/" target="_blank" rel="noopener">Java 集合系列</a></li><li><a href="https://www.cnblogs.com/skywang12345/p/3311899.html" target="_blank" rel="noopener">[转载] 散列表(Hash Table)从理论到实用（上）</a><blockquote><p>ps:.net 中 HashTable 的实现，有一定的学习意义。</p></blockquote></li></ul><h3 id="2019-08-06"><a href="#2019-08-06" class="headerlink" title="2019-08-06"></a>2019-08-06</h3><ul><li><a href="https://www.jianshu.com/p/fc7b69608954" target="_blank" rel="noopener">《Effective Java 第三版》目录汇总</a><blockquote><p>ps：之前买过第二版，随便翻了一下，有点看不懂，现在看到翻译的第三版有一些收获，看来经典书籍应该反复阅读。建议购买正版书籍，有英语阅读能力可购买英文版。</p></blockquote></li></ul><h3 id="2018-08-08"><a href="#2018-08-08" class="headerlink" title="2018-08-08"></a>2018-08-08</h3><ul><li><a href="https://mp.weixin.qq.com/s/m9bJNdd7MgBJr023rjtisQ" target="_blank" rel="noopener">MySQL 大表优化方案</a></li></ul><h3 id="2018-08-06"><a href="#2018-08-06" class="headerlink" title="2018-08-06"></a>2018-08-06</h3><ul><li><a href="https://mp.weixin.qq.com/s/mJVkLn2I1O7V8jvxc_Z4zw" target="_blank" rel="noopener">JVM内存结构 VS Java内存模型 VS Java对象模型</a></li><li><a href="https://mp.weixin.qq.com/s/ME_rVwhstQ7FGLPVcfpugQ" target="_blank" rel="noopener">再有人问你Java内存模型是什么，就把这篇文章发给他</a></li><li><a href="https://mp.weixin.qq.com/s/tI_4nCIg1kkcf6_UW1aA5A" target="_blank" rel="noopener">再有人问你synchronized是什么，就把这篇文章发给他</a></li></ul><h3 id="2018-07-29"><a href="#2018-07-29" class="headerlink" title="2018-07-29"></a>2018-07-29</h3><ul><li><a href="https://blog.csdn.net/l1028386804/article/details/54657412" target="_blank" rel="noopener">MySQL之——GROUP BY分组取字段最大值</a><blockquote><p>Oracle、SQL Server 的实现可借鉴其思路。</p></blockquote></li></ul><h3 id="2018-05-18"><a href="#2018-05-18" class="headerlink" title="2018-05-18"></a>2018-05-18</h3><ul><li><a href="https://zhuanlan.zhihu.com/p/20872901" target="_blank" rel="noopener">API 调用次数限制实现</a></li></ul><h3 id="2018-05-07"><a href="#2018-05-07" class="headerlink" title="2018-05-07"></a>2018-05-07</h3><ul><li><a href="https://mp.weixin.qq.com/s/Cv-UlxMjWwhU4NOFwnzvGg" target="_blank" rel="noopener">分布式之缓存击穿</a></li></ul><h3 id="2018-05-14"><a href="#2018-05-14" class="headerlink" title="2018-05-14"></a>2018-05-14</h3><ul><li><a href="https://mp.weixin.qq.com/s/V9hqwkq1uEApbya4pl3EVQ" target="_blank" rel="noopener">HTTP 协议又冷又实用的技能大全！</a></li></ul><h3 id="2018-05-07-1"><a href="#2018-05-07-1" class="headerlink" title="2018-05-07"></a>2018-05-07</h3><ul><li><a href="https://mp.weixin.qq.com/s/_7l0JEFFuKZVjeIwVYwtdw" target="_blank" rel="noopener">算法分析神器—时间复杂度</a></li></ul><h3 id="2018-04-28"><a href="#2018-04-28" class="headerlink" title="2018-04-28"></a>2018-04-28</h3><ul><li><a href="https://mp.weixin.qq.com/s/D2CmaQ1zSFYSBzyQDLXqng" target="_blank" rel="noopener">为什么 MySQL 数据库索引选择使用 B+树？</a></li><li><a href="https://mp.weixin.qq.com/s/CfekzTTT-a066_PyT_n_eA" target="_blank" rel="noopener">Java 设计模式–单例模式！</a></li><li><a href="https://mp.weixin.qq.com/s/o367qwLWSZTN8WGuf1OI7g" target="_blank" rel="noopener">面试必备：如何将一个长 URL 转换为一个短 URL？</a></li><li><a href="https://mp.weixin.qq.com/s/cpZgU1-QGgkfv4dhIhW1nw" target="_blank" rel="noopener">【面试题】2018 年最全 Java 面试通关秘籍第五套！</a></li></ul><hr><p>Last updated: 2019-08-08</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> commend </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> article </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
+      <title>音乐小屋</title>
+      <link href="/2018/04/27/Music/"/>
+      <url>/2018/04/27/Music/</url>
+      
+        <content type="html"><![CDATA[<p>欢迎来到我的音乐小屋！😄，可以推荐好听的歌曲给我哦，thinks。</p><html><br>    <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="450" src="//music.163.com/outchain/player?type=0&id=978407220&auto=0&height=430"></iframe><br></html><hr><p>Last updated: 2018-04-27</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> Music </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
+      <title>Ubuntu 无法全屏显示</title>
+      <link href="/2018/04/26/Ubuntu-unknow-display/"/>
+      <url>/2018/04/26/Ubuntu-unknow-display/</url>
+      
+        <content type="html"><![CDATA[<h3 id="前情概要"><a href="#前情概要" class="headerlink" title="前情概要"></a>前情概要</h3><p>在 VMware 12 中安装 Ubuntu 16.04 LTS 后 ，无法显示全屏（1920x1080)分辨率，而显示中的分辨率设置一直都是 unknown display 的状态。于是根据网上的方案琢磨了很久，勉强算解决了全屏的问题，后续有更好的方案会再次更新，也欢迎各位告诉我更好的解决方式。</p><h3 id="更改-Ubuntu-分辨率"><a href="#更改-Ubuntu-分辨率" class="headerlink" title="更改 Ubuntu 分辨率"></a>更改 Ubuntu 分辨率</h3><h4 id="xrandr"><a href="#xrandr" class="headerlink" title="xrandr"></a>xrandr</h4><p>Ctrl + alt + t，进入终端，使用 xrandr 命令，会打印以下信息。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Screen 0: minimum 1 x 1, current 1920 x 1080, maximum 8192 x 8192</span><br><span class="line">Virtual1 connected primary 1920x1080+0+0 (normal left inverted right x axis y axis) 0mm x 0mm</span><br></pre></td></tr></table></figure><blockquote><p>注意：打印信息中第二行的 Virtual1 ，这是显示器的名字。这里你可能和我不同，如果不同，则以下的 Virtual1 都需要替换成对应的显示器的名字。</p></blockquote><h4 id="编写-display-sh"><a href="#编写-display-sh" class="headerlink" title="编写 display.sh"></a>编写 display.sh</h4><p>在桌面点击文件，然后右键新建一个空白文档，使用 gedit 打开文件，添加以下代码，然后保存退出，修改文件名为 display.sh</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cvt 1920 1080</span><br><span class="line">xrandr --newmode &quot;1920X1080_60.00&quot; 173.00  1920 2048 2248 2576  1080 1083 1088 1120 -hsync +vsync</span><br><span class="line">xrandr --addmode Virtual1 &quot;1920X1080_60.00&quot;</span><br><span class="line">xrandr --output Virtual1 --mode &quot;1920X1080_60.00&quot;</span><br></pre></td></tr></table></figure><h4 id="对-shell-授权"><a href="#对-shell-授权" class="headerlink" title="对 shell 授权"></a>对 shell 授权</h4><p>再次进入终端，使用以下命令对 display.sh 进行授权</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd ~ #确保进入的目录正确，可忽略</span><br><span class="line">chmod 777 ./display.sh</span><br></pre></td></tr></table></figure><h4 id="编辑-xprofile"><a href="#编辑-xprofile" class="headerlink" title="编辑 xprofile"></a>编辑 xprofile</h4><p>然后在终端输入以下命令</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gedit ~/.xprofile</span><br></pre></td></tr></table></figure><p>向 xprofile 添加以下命令,保存退出即可。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd ~</span><br><span class="line">./display.sh</span><br></pre></td></tr></table></figure><blockquote><p>xprofile 会在登陆成功后运行，所有无法修改登陆之前的分辨率，而只能修改登陆之后的分辨率</p></blockquote><h4 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h4><p>在终端中使用 reboot 命令重启 Ubuntu，即可查看效果。</p><h3 id="存在的问题"><a href="#存在的问题" class="headerlink" title="存在的问题"></a>存在的问题</h3><p>1.登录前的分辨率仍未更改。 2.每次登录后都会进行更改，并不高效。 3.电脑重新启动后，将挂起 Ubuntu 还原，分辨率会被还原，需要重新运行 display.sh。（TODO）</p><hr><p>Last updated: 2018-04-27</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Linux </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Ubuntu </tag>
+            
+            <tag> display </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
+      <title>Ubuntu</title>
+      <link href="/2018/04/25/Ubuntu/"/>
+      <url>/2018/04/25/Ubuntu/</url>
+      
+        <content type="html"><![CDATA[<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>使用 VMware 12 + Ubuntu 16.04 LTS</p><blockquote><p><a href="https://jingyan.baidu.com/article/c275f6ba07e269e33d756714.html" target="_blank" rel="noopener">安装教程</a></p></blockquote><h3 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h3><ul><li><a href="../../26/Ubuntu-unknow-display">全屏显示</a> Ubuntu</li><li>移除 Amazon</li></ul><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get remove unity-webapps-common</span><br></pre></td></tr></table></figure><hr><p>Last updated: 2018-04-27</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Linux </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Ubuntu </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
+      <title>博客更新日志</title>
+      <link href="/2018/04/25/Update/"/>
+      <url>/2018/04/25/Update/</url>
+      
+        <content type="html"><![CDATA[<blockquote><p>记录博客的配置等更新</p></blockquote><h3 id="2018-04-27"><a href="#2018-04-27" class="headerlink" title="2018-04-27"></a>2018-04-27</h3><ul><li>将首页网易云歌单外链改为单独的页面。</li><li>添加首页<a href="https://www.seniverse.com/widget" target="_blank" rel="noopener">心知天气</a>网页插件</li></ul><hr><p>Last updated: 2018-04-27</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> Update </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
+      <title>Angular</title>
+      <link href="/2018/03/05/Angular/"/>
+      <url>/2018/03/05/Angular/</url>
+      
+        <content type="html"><![CDATA[<p>由于 angular.js 和 Angular 的跨度太大，由 js 改为 ts 开发，路由等内容不是很理解 😂。<br>等 Angular 6，ng-zorro 1.0 稳定版本发布后，开始重新学习 Angular 的英雄教程 🙃。</p><hr><p>Last updated: 2018-03-09</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 前端 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 前端 </tag>
+            
+            <tag> Angular </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
+      <title>Vue</title>
+      <link href="/2018/01/05/Vue/"/>
+      <url>/2018/01/05/Vue/</url>
+      
+        <content type="html"><![CDATA[<h3 id="Vue-安装"><a href="#Vue-安装" class="headerlink" title="Vue 安装"></a>Vue 安装</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">npm install -g vue-cli</span><br><span class="line">vue init webpack vue-demo</span><br><span class="line">cd vue-demo</span><br><span class="line">npm install</span><br><span class="line">npm run dev</span><br></pre></td></tr></table></figure><h3 id="Vue-UI-库"><a href="#Vue-UI-库" class="headerlink" title="Vue UI 库"></a>Vue UI 库</h3><p><a href="http://element-cn.eleme.io/#/zh-CN" target="_blank" rel="noopener">Element</a></p><hr><p>Last updated: 2018-03-09</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 前端 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Vue </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
+      <title>我的博客</title>
+      <link href="/2018/01/04/Blog/"/>
+      <url>/2018/01/04/Blog/</url>
+      
+        <content type="html"><![CDATA[<p>这是我的博客。<br>使用 <a href="../../03/Hexo+Gitee">Hexo+Gitee</a> 搭建，选用的是 <a href="https://github.com/viosey/hexo-theme-material/" target="_blank" rel="noopener">material</a> 主题。<br>已经从 GitHub 迁移到了 gitee（码云） 😀，国内的访问速度将大幅提升!</p><hr><p>Last updated: 2018-03-12</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> Blog </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
+      <title>待办事项</title>
+      <link href="/2018/01/04/TODO/"/>
+      <url>/2018/01/04/TODO/</url>
+      
+        <content type="html"><![CDATA[<h3 id="TODO-List"><a href="#TODO-List" class="headerlink" title="TODO List"></a>TODO List</h3><ul><li style="list-style: none"><input type="checkbox"> 给每篇 blog 更换合适的背景图 ✨。</li><li style="list-style: none"><input type="checkbox"> 整理最近写的笔记，并发布。</li></ul><h3 id="complete"><a href="#complete" class="headerlink" title="complete"></a>complete</h3><ul><li style="list-style: none"><input type="checkbox" checked> 配置 blog 的本地搜索。</li><li style="list-style: none"><input type="checkbox" checked> 一篇文章多个 tag。</li><li style="list-style: none"><input type="checkbox" checked> <del>解决网易云音乐的歌单外链，经常提示资源加载失败的问题</del>目前移除了首页的歌单外链,后续观察音乐页面此问题是否严重。</li></ul><hr><p>Last updated: 2018-03-07</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> TODO </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
+      <title>Hexo+Gitee</title>
+      <link href="/2018/01/03/Hexo+Gitee/"/>
+      <url>/2018/01/03/Hexo+Gitee/</url>
+      
+        <content type="html"><![CDATA[<blockquote><p>我的博客使用的是 Hexo + Gitee（码云）。Hexo 是基于 Node 的博客框架，所以需要 Node 环境支持。<br>选用 Hexo 的理由是，主题更换相对简单（但是配置和迁移起来也许会很麻烦了，所以选择一个符合自己口味的主题很重要），gitee 则是用来托管和预览编译后的静态页面，而 gitee 相对 GitHub 来说，在国内的访问速度无疑更快一些。<br>Ps.博客于 Windows 系统搭建</p></blockquote><h2 id="Hexo"><a href="#Hexo" class="headerlink" title="Hexo"></a>Hexo</h2><h3 id="Git"><a href="#Git" class="headerlink" title="Git"></a>Git</h3><h4 id="Git-的下载和安装"><a href="#Git-的下载和安装" class="headerlink" title="Git 的下载和安装"></a>Git 的下载和安装</h4><p>Git 的安装，可以于<a href="https://git-scm.com" target="_blank" rel="noopener">Git</a>官网下载与系统相匹配的版本，安装即可。</p><h4 id="Git-的配置"><a href="#Git-的配置" class="headerlink" title="Git 的配置"></a>Git 的配置</h4><p>Git 在安装完后，需要对 Git 进行配置，首先以下步骤打开 Git Bash<br>操作步骤：鼠标右键 -&gt; Git Bash Here<br>现在即可看到 Git Bash，需要执行以下命令配置 git 的用户名和邮箱</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.name &quot;Your Name&quot;</span><br><span class="line">git config --global user.email &quot;email@example.com&quot;</span><br></pre></td></tr></table></figure><blockquote><p>Git 的进阶学习推荐<a href="https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000" target="_blank" rel="noopener">廖雪峰老师的 Git 教程</a></p></blockquote><h3 id="Node"><a href="#Node" class="headerlink" title="Node"></a>Node</h3><p>Node 的安装需要要看你对 Node 的使用情况，使用较少则可以直接在 Node 中文网下载最新的 Node 的安装包，直接安装即可。使用较多则推荐使用 nvm 安装 Node，目前没找到好点的教程，具体请百度。</p><h3 id="Hexo-1"><a href="#Hexo-1" class="headerlink" title="Hexo"></a>Hexo</h3><h4 id="安装-Hexo"><a href="#安装-Hexo" class="headerlink" title="安装 Hexo"></a>安装 Hexo</h4><p>安装完 Git 和 Node 之后打开 Git Bash 运行以下命令即可安装 Hexo</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-cli -g</span><br></pre></td></tr></table></figure><blockquote><p>进阶操作推荐阅读<a href="https://hexo.io/zh-cn" target="_blank" rel="noopener">Hexo</a>的官方文档</p></blockquote><h4 id="hexo-init"><a href="#hexo-init" class="headerlink" title="hexo init"></a>hexo init</h4><p>创建一个目录文件夹，作为博客的</p><h2 id="gitee"><a href="#gitee" class="headerlink" title="gitee"></a>gitee</h2><h3 id="账号注册"><a href="#账号注册" class="headerlink" title="账号注册"></a>账号注册</h3><p>这个就不多说了 ~</p><h3 id="添加-SSH-秘钥"><a href="#添加-SSH-秘钥" class="headerlink" title="添加 SSH 秘钥"></a>添加 SSH 秘钥</h3><p>显示 Git 的 SSH 秘钥方法操作步骤：鼠标右键 -&gt; Git GUI Here -&gt; Help -&gt; Show SSH Key -&gt; Copy To Clipboard<br>即可复制 SSH 秘钥到剪贴板</p><h3 id="创建项目"><a href="#创建项目" class="headerlink" title="创建项目"></a>创建项目</h3><p>创建项目是为了托管 Hexo 将 Markdown 文件编译生成的静态页面</p><h3 id="Pages"><a href="#Pages" class="headerlink" title="Pages"></a>Pages</h3><p>开启项目的 Pages 服务后，我们就可以通过 http://项目名.gitee.io/ 去访问搭建的博客了</p><blockquote><p>到这里，gitee + Hexo 的博客环境已搭建完成</p></blockquote><hr><p>Last updated: 2018-03-12</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> Blog </tag>
+            
+        </tags>
+      
+    </entry>
+    
+  
+  
+    
+    <entry>
+      <title>about</title>
+      <link href="/about/index.html"/>
+      <url>/about/index.html</url>
+      
+        <content type="html"><![CDATA[<h2 id="company"><a href="#company" class="headerlink" title="company"></a>company</h2><h3 id="上海赛核信息技术有限公司"><a href="#上海赛核信息技术有限公司" class="headerlink" title="上海赛核信息技术有限公司"></a>上海赛核信息技术有限公司</h3><p>时间：2017.09-2018-07</p><h3 id="上海芯筑智能技术有限公司"><a href="#上海芯筑智能技术有限公司" class="headerlink" title="上海芯筑智能技术有限公司"></a>上海芯筑智能技术有限公司</h3><p>时间：2018.08-2019-07</p><hr><p>Last updated: 2019-07-31</p>]]></content>
+      
+    </entry>
+    
+    <entry>
+      <title>gallery</title>
+      <link href="/gallery/index.html"/>
+      <url>/gallery/index.html</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+    </entry>
+    
+    <entry>
+      <title>links</title>
+      <link href="/links/index.html"/>
+      <url>/links/index.html</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+    </entry>
+    
+    <entry>
+      <title>tags</title>
+      <link href="/tags/index.html"/>
+      <url>/tags/index.html</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+    </entry>
+    
+    <entry>
+      <title>timeline</title>
+      <link href="/timeline/index.html"/>
+      <url>/timeline/index.html</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+    </entry>
+    
+  
+</search>
